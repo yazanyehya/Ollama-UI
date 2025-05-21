@@ -4,8 +4,8 @@
 
 <h1 align="center">
   Fully-featured web interface for Ollama LLMs
+  yazan check the deployment
 </h1>
-
 <div align="center">
   
 ![GitHub Repo stars](https://img.shields.io/github/stars/jakobhoeg/nextjs-ollama-llm-ui)
