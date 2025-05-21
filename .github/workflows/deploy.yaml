@@ -20,5 +20,5 @@ jobs:
         username: ${{ secrets.APP_EC2_USER }}
         key: ${{ secrets.APP_EC2_SSH_KEY }}
         script: |
-          cd ~/nextjs-ollama-llm-ui
+          cd ~
           ./deploy.sh
