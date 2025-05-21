@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  env: {
+    OLLAMA_URL: process.env.OLLAMA_URL || 'http://127.0.0.1:11434'
+  },
   webpack: (config, { isServer }) => {
         // Fixes npm packages that depend on `fs` module
         if (!isServer) {

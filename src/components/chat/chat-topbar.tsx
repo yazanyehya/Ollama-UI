@@ -6,18 +6,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-
 import { Button } from "../ui/button";
-import { CaretSortIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { Sidebar } from "../sidebar";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Message } from "ai/react";
 import { getSelectedModel } from "@/lib/model-helper";
 import useChatStore from "@/app/hooks/useChatStore";
@@ -37,7 +27,6 @@ export default function ChatTopbar({
 }: ChatTopbarProps) {
   const [models, setModels] = React.useState<string[]>([]);
   const [open, setOpen] = React.useState(false);
-  const [sheetOpen, setSheetOpen] = React.useState(false);
   const selectedModel = useChatStore((state) => state.selectedModel);
   const setSelectedModel = useChatStore((state) => state.setSelectedModel);
 
@@ -57,53 +46,33 @@ export default function ChatTopbar({
     })();
   }, []);
 
-
   const handleModelChange = (model: string) => {
     setSelectedModel(model);
     setOpen(false);
   };
 
-  const handleCloseSidebar = () => {
-    setSheetOpen(false);
-  };
-
   return (
-    <div className="w-full flex px-4 py-6 items-center justify-between lg:justify-center ">
-      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetTrigger>
-          <HamburgerMenuIcon className="lg:hidden w-5 h-5" />
-        </SheetTrigger>
-        <SheetContent side="left">
-          <Sidebar
-            chatId={chatId || ""}
-            isCollapsed={false}
-            isMobile={false}
-            messages={messages}
-            closeSidebar={handleCloseSidebar}
-          />
-        </SheetContent>
-      </Sheet>
-
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            disabled={isLoading}
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[300px] justify-between"
-          >
-            {selectedModel || "Select model"}
-            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-1">
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          disabled={isLoading}
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-[180px] justify-between bg-background/60 border-0 font-medium text-sm"
+        >
+          {selectedModel || "Select model"}
+          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[180px] p-0">
+        <div className="max-h-[300px] overflow-y-auto">
           {models.length > 0 ? (
             models.map((model) => (
               <Button
                 key={model}
                 variant="ghost"
-                className="w-full"
+                className="w-full justify-start px-4 py-2 text-sm font-medium"
                 onClick={() => {
                   handleModelChange(model);
                 }}
@@ -112,12 +81,12 @@ export default function ChatTopbar({
               </Button>
             ))
           ) : (
-            <Button variant="ghost" disabled className=" w-full">
+            <div className="px-4 py-2 text-sm text-muted-foreground">
               No models available
-            </Button>
+            </div>
           )}
-        </PopoverContent>
-      </Popover>
-    </div>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }

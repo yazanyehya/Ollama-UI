@@ -13,6 +13,10 @@ import { v4 as uuidv4 } from "uuid";
 import useChatStore from "@/app/hooks/useChatStore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { Sidebar } from "../sidebar";
 
 export interface ChatProps {
   id: string;
@@ -60,6 +64,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
   const saveMessages = useChatStore((state) => state.saveMessages);
   const getMessagesById = useChatStore((state) => state.getMessagesById);
   const router = useRouter();
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -116,26 +121,69 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-3xl h-full">
-      <ChatTopbar
-        isLoading={isLoading}
-        chatId={id}
-        messages={messages}
-        setMessages={setMessages}
-      />
+    <div className="flex flex-col w-full h-full">
+      <div className="flex items-center justify-between px-4 py-2 border-b">
+        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <HamburgerMenuIcon className="w-4 h-4" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0">
+            <Sidebar
+              chatId={id}
+              isCollapsed={false}
+              isMobile={true}
+              messages={messages}
+            />
+          </SheetContent>
+        </Sheet>
 
-      {messages.length === 0 ? (
-        <div className="flex flex-col h-full w-full items-center gap-4 justify-center">
-          <Image
-            src="/ollama.png"
-            alt="AI"
-            width={40}
-            height={40}
-            className="h-16 w-14 object-contain dark:invert"
+        <div className="flex-1 flex justify-end">
+          <ChatTopbar
+            isLoading={isLoading}
+            chatId={id}
+            messages={messages}
+            setMessages={setMessages}
           />
-          <p className="text-center text-base text-muted-foreground">
-            How can I help you today?
-          </p>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        {messages.length === 0 ? (
+          <div className="flex flex-col h-full items-center justify-center gap-2">
+            <Image
+              src="/ollama.png"
+              alt="AI"
+              width={48}
+              height={48}
+              className="h-12 w-12 object-contain dark:invert"
+            />
+            <p className="text-base text-muted-foreground">
+              How can I help you today?
+            </p>
+          </div>
+        ) : (
+          <ChatList
+            messages={messages}
+            isLoading={isLoading}
+            loadingSubmit={loadingSubmit}
+            reload={async () => {
+              removeLatestMessage();
+              const requestOptions: ChatRequestOptions = {
+                body: {
+                  selectedModel: selectedModel,
+                },
+              };
+              setLoadingSubmit(true);
+              return reload(requestOptions);
+            }}
+          />
+        )}
+      </div>
+
+      <div className="border-t bg-background">
+        <div className="max-w-3xl mx-auto px-4 py-4">
           <ChatBottombar
             input={input}
             handleInputChange={handleInputChange}
@@ -145,35 +193,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
             setInput={setInput}
           />
         </div>
-      ) : (
-        <>
-          <ChatList
-            messages={messages}
-            isLoading={isLoading}
-            loadingSubmit={loadingSubmit}
-            reload={async () => {
-              removeLatestMessage();
-
-              const requestOptions: ChatRequestOptions = {
-                body: {
-                  selectedModel: selectedModel,
-                },
-              };
-
-              setLoadingSubmit(true);
-              return reload(requestOptions);
-            }}
-          />
-          <ChatBottombar
-            input={input}
-            handleInputChange={handleInputChange}
-            handleSubmit={onSubmit}
-            isLoading={isLoading}
-            stop={handleStop}
-            setInput={setInput}
-          />
-        </>
-      )}
+      </div>
     </div>
   );
 }

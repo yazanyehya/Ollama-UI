@@ -46,11 +46,16 @@ export default function ChatBottombar({
   const setBase64Images = useChatStore((state) => state.setBase64Images);
   const selectedModel = useChatStore((state) => state.selectedModel);
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+      handleSubmit(e as any);
     }
+  };
+
+  const handleImageClick = () => {
+    // TODO: Implement image upload functionality
+    console.log('Image upload clicked');
   };
 
   const { isListening, transcript, startListening, stopListening } =
@@ -77,132 +82,83 @@ export default function ChatBottombar({
   }, [inputRef]);
 
   return (
-    <div className="px-4 pb-7 flex justify-between w-full items-center relative ">
-      <AnimatePresence initial={false}>
-        <form
-          onSubmit={handleSubmit}
-          className="w-full items-center flex flex-col  bg-accent dark:bg-card rounded-lg "
-        >
+    <div className="w-full">
+      <form onSubmit={handleSubmit} className="relative">
+        <div className="relative flex items-center">
+          <Button
+            type="button"
+            variant="ghost"
+            className="absolute left-2 p-1 h-8 w-8 hover:bg-accent/50"
+            onClick={handleImageClick}
+          >
+            <ImageIcon className="h-5 w-5 text-muted-foreground" />
+          </Button>
+          
           <ChatInput
-            value={isListening ? (transcript.length ? transcript : "") : input}
             ref={inputRef}
-            onKeyDown={handleKeyPress}
+            autoFocus
+            tabIndex={0}
+            rows={1}
+            value={input}
             onChange={handleInputChange}
-            name="message"
-            placeholder={!isListening ? "Enter your prompt here" : "Listening"}
-            className="max-h-40 px-6 pt-6 border-0 shadow-none bg-accent rounded-lg text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed dark:bg-card"
+            placeholder="Message..."
+            spellCheck={false}
+            className="min-h-[56px] w-full resize-none bg-background/80 pl-12 pr-14 py-4 rounded-2xl border shadow-sm focus-visible:ring-1 focus-visible:ring-accent"
+            onKeyDown={handleKeyDown}
           />
 
-          <div className="flex w-full items-center p-2">
+          <div className="absolute right-2 flex items-center">
             {isLoading ? (
-              // Loading state
-              <div className="flex w-full justify-between">
-                <MultiImagePicker disabled onImagesPick={setBase64Images} />
-                <div>
-                  <Button
-                    className="shrink-0 rounded-full"
-                    variant="ghost"
-                    size="icon"
-                    type="button"
-                    disabled
-                  >
-                    <Mic className="w-5 h-5" />
-                  </Button>
-                  <Button
-                    className="shrink-0 rounded-full"
-                    variant="ghost"
-                    size="icon"
-                    type="submit"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      stop();
-                    }}
-                  >
-                    <StopIcon className="w-5 h-5" />
-                  </Button>
-                </div>
-              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:bg-accent/50"
+                onClick={stop}
+              >
+                <StopIcon className="h-5 w-5 text-muted-foreground" />
+              </Button>
             ) : (
-              // Default state
-              <div className="flex w-full justify-between">
-                <MultiImagePicker
-                  disabled={isLoading}
-                  onImagesPick={setBase64Images}
-                />
-                <div>
-                  {/* Microphone button with animation when listening */}
-                  <Button
-                    className={`shrink-0 rounded-full ${
-                      isListening
-                        ? "relative bg-blue-500/30 hover:bg-blue-400/30"
-                        : ""
-                    }`}
-                    variant="ghost"
-                    size="icon"
-                    type="button"
-                    onClick={handleListenClick}
-                    disabled={isLoading}
-                  >
-                    <Mic className="w-5 h-5" />
-                    {isListening && (
-                      <span className="animate-pulse absolute h-[120%] w-[120%] rounded-full bg-blue-500/30" />
-                    )}
-                  </Button>
-
-                  {/* Send button */}
-                  <Button
-                    className="shrink-0 rounded-full"
-                    variant="ghost"
-                    size="icon"
-                    type="submit"
-                    disabled={
-                      isLoading ||
-                      !input.trim() ||
-                      isListening ||
-                      !selectedModel
-                    }
-                  >
-                    <SendHorizonal className="w-5 h-5" />
-                  </Button>
-                </div>
-              </div>
+              <Button
+                type="submit"
+                variant="ghost"
+                size="icon"
+                disabled={!input.trim()}
+                className="h-8 w-8 hover:bg-accent/50 disabled:opacity-40"
+              >
+                <PaperPlaneIcon className="h-5 w-5 text-muted-foreground" />
+              </Button>
             )}
           </div>
-          {base64Images && (
-            <div className="w-full flex px-2 pb-2 gap-2 ">
-              {base64Images.map((image, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="relative bg-muted-foreground/20 flex w-fit flex-col gap-2 p-1 border-t border-x rounded-md"
-                  >
-                    <div className="flex text-sm">
-                      <Image
-                        src={image}
-                        width={20}
-                        height={20}
-                        className="h-auto rounded-md w-auto max-w-[100px] max-h-[100px]"
-                        alt={""}
-                      />
-                    </div>
-                    <Button
-                      onClick={() => {
-                        const updatedImages = (prevImages: string[]) =>
-                          prevImages.filter((_, i) => i !== index);
-                        setBase64Images(updatedImages(base64Images));
-                      }}
-                      size="icon"
-                      className="absolute -top-1.5 -right-1.5 text-white cursor-pointer  bg-red-500 hover:bg-red-600 w-4 h-4 rounded-full flex items-center justify-center"
-                    >
-                      <Cross2Icon className="w-3 h-3" />
-                    </Button>
-                  </div>
-                );
-              })}
+        </div>
+      </form>
+      
+      {base64Images && base64Images.length > 0 && (
+        <div className="flex gap-2 mt-2">
+          {base64Images.map((image, index) => (
+            <div key={index} className="relative">
+              <Image
+                src={image}
+                width={80}
+                height={80}
+                alt=""
+                className="rounded-lg border object-cover"
+              />
+              <Button
+                onClick={() => {
+                  const updatedImages = base64Images.filter((_, i) => i !== index);
+                  setBase64Images(updatedImages);
+                }}
+                size="icon"
+                variant="destructive"
+                className="absolute -top-2 -right-2 h-5 w-5 rounded-full"
+              >
+                <Cross2Icon className="h-3 w-3" />
+              </Button>
             </div>
-          )}
-        </form>
-      </AnimatePresence>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
