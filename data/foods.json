@@ -1,0 +1,13 @@
+{
+    "chicken breast (100g)": { "protein": 31, "carbs": 0, "fat": 3.6, "calories": 165 },
+    "brown rice (1 cup)": { "protein": 5, "carbs": 45, "fat": 1.8, "calories": 215 },
+    "avocado (half)": { "protein": 2, "carbs": 8.5, "fat": 15, "calories": 160 },
+    "broccoli (1 cup)": { "protein": 2.5, "carbs": 6, "fat": 0.3, "calories": 30 },
+    "sweet potato (1 cup mashed)": { "protein": 4, "carbs": 58, "fat": 0.2, "calories": 240 },
+    "salmon (100g)": { "protein": 20, "carbs": 0, "fat": 13, "calories": 208 },
+    "egg (1 large)": { "protein": 6, "carbs": 0.6, "fat": 5, "calories": 70 },
+    "oats (1/2 cup)": { "protein": 5, "carbs": 27, "fat": 3, "calories": 150 },
+    "banana (1 medium)": { "protein": 1.3, "carbs": 27, "fat": 0.3, "calories": 105 },
+    "olive oil (1 tbsp)": { "protein": 0, "carbs": 0, "fat": 14, "calories": 119 }
+  }
+  
