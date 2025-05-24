@@ -16,13 +16,13 @@ export default function Page({ params }: { params: { id: string } }) {
   }
 
   return (
-    <main className="flex h-[calc(100dvh)] flex-col items-center">
+    <main className="flex h-[calc(100dvh)] flex-col items-center ">
       <ChatLayout
         key={id}
         id={id}
         initialMessages={chat.messages}
-        navCollapsedSize={8}
-        defaultLayout={[25, 140]}
+        navCollapsedSize={10}
+        defaultLayout={[30, 160]}
       />
     </main>
   );
