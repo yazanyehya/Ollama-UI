@@ -22,25 +22,31 @@ export async function POST(req: Request) {
 
     const systemPrompt: CoreMessage = {
       role: 'system',
-      content: `You are a nutritionist. Generate 3 meals (breakfast, lunch, dinner) using these foods:
+      content: `You are a professional nutritionist. Generate 3 meals (breakfast, lunch, dinner) using only these foods:
     
     ${foodList}
-    The user will give you daily macro goals (calories, protein, carbs, fat).
-    Your response must generate 3 meals (breakfast, lunch, dinner) that stay within ±10% of each target.
-    Each meal:
-    - 2–4 foods
-    - Specify grams per food
-    - Calculate total macros for the meal
-    - Format:
+    
+    Meal rules:
+    - Each meal must include 2–4 foods from the list.
+    - For **breakfast**, choose only foods typically eaten in the morning (e.g. oats, eggs, toast, avocado, yogurt, etc.).
+    - Specify the **gram amount per food**.
+    - Calculate and display the **total macros** (protein, carbs, fat, calories) for each meal.
+    - Format exactly like this:
     
     Breakfast  
-    - 200g chicken breast  
     - 100g oats  
+    - 1 large egg  
     Protein: __g | Carbs: __g | Fat: __g | Calories: __ kcal
     
-    Lunch ...
+    Lunch ...  
     Dinner ...
-    Total: ...`
+    
+    Total (all meals):  
+    Protein: __g | Carbs: __g | Fat: __g | Calories: __ kcal
+    
+    At the end, add this message:
+    **Note**: These meal suggestions are approximate. You can increase or reduce the quantities in any meal to better suit your daily needs.
+    `
     };
     
 
