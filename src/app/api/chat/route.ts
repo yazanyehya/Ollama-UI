@@ -27,7 +27,7 @@ export async function POST(req: Request) {
 ${foodList}
 
 Meal rules:
-- Each meal must include –4 foods from the list.
+- Each meal must include 3–4 foods from the list.
 - For **breakfast**, choose only foods typically eaten in the morning (e.g. oats, eggs, toast, avocado, yogurt, etc.).
 - Specify the **gram amount per food**.
 - Calculate and display the **total macros** (protein, carbs, fat, calories) for each meal.
