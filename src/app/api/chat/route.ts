@@ -23,6 +23,37 @@ export async function POST(req: Request) {
     const systemPrompt: CoreMessage = {
       role: 'user',
       content: `
+    Available foods:
+    eggs,checken brests,oat  
+      
+    My daily goal is 2200 kcal, 160g protein, 180g carbs, 70g fat.
+    
+    Generate 3 meals (breakfast, lunch, dinner) using only these foods.
+    Each meal must include 1 foods from the list.
+    For breakfast, use only typical morning foods (oats, eggs, toast, avocado, yogurt, etc.).
+    List each food with grams.
+    For each meal, show the total macros (protein, carbs, fat, calories).
+    At the end, show the total for all meals, which matches my daily goal.
+    
+    Output only the results in this exact format (do not explain or show calculations):
+    
+    Breakfast
+    - [amount] [food]
+    - [amount] [food]
+    Protein: [g] | Carbs: [g] | Fat: [g] | Calories: [kcal]
+    
+    Lunch
+    - ...
+    Protein: [g] | Carbs: [g] | Fat: [g] | Calories: [kcal]
+    
+    Dinner
+    - ...
+    Protein: [g] | Carbs: [g] | Fat: [g] | Calories: [kcal]
+    
+    Total (all meals):
+    Protein: 160g | Carbs: 180g | Fat: 70g | Calories: 2200kcal
+
+    Note: These meal suggestions are approximate. You can increase or reduce the quantities in any meal to better suit your daily needs
     `
     };
     
