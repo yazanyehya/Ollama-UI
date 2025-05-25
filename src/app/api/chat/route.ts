@@ -44,8 +44,6 @@ Dinner ...
 Total (all meals):  
 Protein: __g | Carbs: __g | Fat: __g | Calories: __ kcal
 
-At the end, add this message and notheing more:
-**Note**: These meal suggestions are approximate. You can increase or reduce the quantities in any meal to better suit your daily needs
 `
 };
 
