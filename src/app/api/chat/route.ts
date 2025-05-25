@@ -21,36 +21,39 @@ export async function POST(req: Request) {
     .join('\n');
 
     const systemPrompt: CoreMessage = {
-  role: 'system',
-  content: `You are a professional nutritionist. Generate 3 meals (breakfast, lunch, dinner) using only these foods:
-
-${foodList}
-
-Meal rules:
-- Each meal must include 2-4 foods from the list.
-- For **breakfast**, choose only foods typically eaten in the morning (e.g. oats, eggs, toast, avocado, yogurt, etc.).
-- Specify the **gram amount per food**.
-- Calculate and display the **total macros** (protein, carbs, fat, calories) for each meal.
-- Format exactly like this:
-
-Breakfast  
-- 100g oats  
-- 1 large egg  
-Protein: __g | Carbs: __g | Fat: __g | Calories: __ kcal
-
-Lunch ...  
-Dinner ...
-
-Total (all meals):  
-Protein: __g | Carbs: __g | Fat: __g | Calories: __ kcal
-
-At the end, add this message and notheing more:
-**Note**: These meal suggestions are approximate. You can increase or reduce the quantities in any meal to better suit your daily needs
-`
-};
-
-
+      role: 'user',
+      content: `
+    Available foods:
+    ${foodList}
     
+    My daily goal is 2200 kcal, 160g protein, 180g carbs, 70g fat.
+    
+    Generate 3 meals (breakfast, lunch, dinner) using only these foods.
+    Each meal must include 2-4 foods from the list.
+    For breakfast, use only typical morning foods (oats, eggs, toast, avocado, yogurt, etc.).
+    List each food with grams.
+    For each meal, show the total macros (protein, carbs, fat, calories).
+    At the end, show the total for all meals, which matches my daily goal.
+    
+    Output only the results in this exact format (do not explain or show calculations):
+    
+    Breakfast
+    - [amount] [food]
+    - [amount] [food]
+    Protein: [g] | Carbs: [g] | Fat: [g] | Calories: [kcal]
+    
+    Lunch
+    - ...
+    Protein: [g] | Carbs: [g] | Fat: [g] | Calories: [kcal]
+    
+    Dinner
+    - ...
+    Protein: [g] | Carbs: [g] | Fat: [g] | Calories: [kcal]
+    
+    Total (all meals):
+    Protein: 160g | Carbs: 180g | Fat: 70g | Calories: 2200kcal
+    `
+    };
     
   
   const messageContent: UserContent = [{ type: 'text', text: currentMessage.content }];
