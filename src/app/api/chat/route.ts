@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     My daily goal is 2200 kcal, 160g protein, 180g carbs, 70g fat.
     
     Generate 3 meals (breakfast, lunch, dinner) using only these foods.
-    Each meal must include 2-4 foods from the list.
+    Each meal must include 1 foods from the list.
     For breakfast, use only typical morning foods (oats, eggs, toast, avocado, yogurt, etc.).
     List each food with grams.
     For each meal, show the total macros (protein, carbs, fat, calories).
