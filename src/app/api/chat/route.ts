@@ -52,8 +52,6 @@ export async function POST(req: Request) {
     
     Total (all meals):
     Protein: 160g | Carbs: 180g | Fat: 70g | Calories: 2200kcal
-    At the end, add this message and notheing more:
-    **Note**: These meal suggestions are approximate. You can increase or reduce the quantities in any meal to better suit your daily needs.
     `
     };
     
